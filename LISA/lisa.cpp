@@ -44,40 +44,33 @@ int main(){
 	}
     }
 
-    //FOR(i, 0, numbers.size()){ cout << numbers[i] << endl; }
-    //FOR(i, 0, operators.size()){ cout << operators[i] << endl; }
-
-    vector< vector<int> > costs(numbers.size() + 1, vector<int>(numbers.size() + 1, 100000000));
-    FOR(i, 0, numbers.size() + 1){ costs[i][i] = numbers[i]; }
-/*    FOR(i, 0, numbers.size()){ 
-	if(operators[i] == '+'){
-            costs[i][i+1] = numbers[i] + numbers[i+1]; 
-	}else if(operators[i] == '*'){
-            costs[i][i+1] = numbers[i] * numbers[i+1]; 
-	}
-    } */
+    vector< vector<long long> > min_costs(numbers.size() + 1, vector<long long>(numbers.size() + 1, numeric_limits<int>::max()));
+    vector< vector<long long> > max_costs(numbers.size() + 1, vector<long long>(numbers.size() + 1, 0));
+    FOR(i, 0, numbers.size() + 1){ max_costs[i][i] = min_costs[i][i] = numbers[i]; }
 
     int numbers_total = numbers.size();
     FOR(l, 2, numbers_total + 1){
       FOR(i, 0, numbers_total - l + 1){
         int j = i + l - 1;
         FOR(k, i, j){
-	  int tmp = 0;
+	  int min_tmp = 0;
+	  int max_tmp = 0;
 	  if(operators[k] == '+'){
-              tmp = costs[i][k] + costs[k+1][j];
+              min_tmp = min_costs[i][k] + min_costs[k+1][j];
+              max_tmp = max_costs[i][k] + max_costs[k+1][j];
 	  }else if(operators[k] == '*'){
-              tmp = costs[i][k] * costs[k+1][j];
+              min_tmp = min_costs[i][k] * min_costs[k+1][j];
+              max_tmp = max_costs[i][k] * max_costs[k+1][j];
 	  }
-          if(tmp < costs[i][j]){
-            costs[i][j] = tmp;
+          if(min_tmp < min_costs[i][j]){
+            min_costs[i][j] = min_tmp;
+          }
+          if(max_tmp > max_costs[i][j]){
+            max_costs[i][j] = max_tmp;
           }
         }
       }
     }
-
-    cout << costs[0][numbers_total-1] << endl;
-//    FOR(i,0,numbers_total){ FOR(j, 0, numbers_total) {
-//    	cout << costs[i][j] << ' ';
-//    } cout << endl; }
+    cout << max_costs[0][numbers_total-1] << " " << min_costs[0][numbers_total-1] << endl;
   }
 }
