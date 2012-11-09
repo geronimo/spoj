@@ -25,6 +25,46 @@
 
 using namespace std;
 
+string strings_sum(string first, string last){
+    int n;
+    string result = "";
+    if(first.size() > last.size()) n = first.size();
+    else n = last.size();
+
+    int carry = 0;
+    for(int i = 0; i < n; i++){
+
+        int sum = 0;
+        if(first.size() <= i){
+            int y = last[i] - '0';
+            sum = y + carry;
+        }
+        else if(last.size() <= i){
+            int x = first[i] - '0';
+            sum = x + carry;
+        }
+        else{
+            int x = first[i] - '0';
+            int y = last[i] - '0';
+            sum = x + y + carry;
+        }
+        carry = 0;
+
+        if(sum < 10){
+            result += (char) sum + '0';
+            carry = 0;
+        }
+        else{
+            result += (char) sum%10 + '0';
+            carry += sum / 10;
+        }
+    }
+    if(carry){
+        result += (char) carry + '0';
+    }
+    return result;
+}
+
 void print_sum_subs(string first, string last, string result, int n, char oper){
     if(n < result.size())
         n = result.size();
@@ -94,38 +134,7 @@ int main(){
         if(first.size() > last.size()) n = first.size();
         else n = last.size();
 
-        int carry = 0;
-        for(int i = 0; i < n; i++){
-
-            int sum = 0;
-            if(first.size() <= i){
-                int y = last[i] - '0';
-                sum = y + carry;
-            }
-            else if(last.size() <= i){
-                int x = first[i] - '0';
-                sum = x + carry;
-            }
-            else{
-                int x = first[i] - '0';
-                int y = last[i] - '0';
-                sum = x + y + carry;
-            }
-            carry = 0;
-
-            if(sum < 10){
-                result += (char) sum + '0';
-                carry = 0;
-            }
-            else{
-                result += (char) sum%10 + '0';
-                carry += sum / 10;
-            }
-        }
-        if(carry){
-            result += (char) carry + '0';
-        }
-
+        result = strings_sum(first, last);
         print_sum_subs(first, last, result, n, oper);
     }
     else if(oper == '-'){
