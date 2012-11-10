@@ -27,41 +27,41 @@ using namespace std;
 
 string test_case;
 
-int max_function(int i){
-    if(i == 0){
-        return 1;
-    }
-    else if(i == 1){
-        if(test_case[i-1] == '2' && test_case[i] <= '6' && test_case[i] != '0'){
-            return 2;
-        }
-        else if(test_case[i-1] == '1' && test_case[i] != '0'){
-            return 2;
-        }
-        else{
-            return 1;
-        }
-    }
-
-    int result = 0;
-    if(test_case[i-1] == '2' && test_case[i] <= '6' && test_case[i] != '0'){
-        return max_function(i-2) + max_function(i-1);
-    } else if(test_case[i-1] == '1' && test_case[i] != '0'){
-        return max_function(i-2) + max_function(i-1);
-    } else if(test_case[i] == '0') {
-        return max_function(i-2);
-    } else {
-        return max_function(i-1);
-    }
-}
-
 int main(){
-    cin >> test_case;
-    while(test_case.size() != 1 && test_case[0] != '0'){
+    string t;
+    cin >> t;
+    while(t[0] != '0'){
 
-        int n = test_case.size();
-        cout << max_function(n-1) << endl;
+        int n = t.size();
+        vector<int> dp(n, 0);
+        if(n == 1){
+            cout << 1 << endl;
+            cin >> t;
+            continue;
+        }
+        dp[0] = 1;
 
-        cin >> test_case;
+        if(t[0] == '2' && t[1] != '0' && t[1] <= '6'){
+            dp[1] = 2;
+        } else if(t[0] == '1' && t[1] != '0'){
+            dp[1] = 2;
+        } else {
+            dp[1] = 1;
+        }
+
+        FOR(i, 2, n){
+            if(t[i-1] == '2' && t[i] != '0' && t[i] <= '6'){
+                dp[i] = dp[i-2] + dp[i-1];
+            } else if(t[i-1] == '1' && t[i] != '0'){
+                dp[i] = dp[i-2] + dp[i-1];
+            } else if(t[i] == '0') {
+                dp[i] = dp[i-2];
+            } else {
+                dp[i] = dp[i-1];
+            }
+        }
+
+        cout << dp[n-1] << endl;
+        cin >> t;
     }
 }
